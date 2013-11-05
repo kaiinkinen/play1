@@ -103,15 +103,17 @@ try:
     get_opt(remaining_args, "https.port", play_env)
 
     # ~~~~~~~~~~~~~~~~~ Override id
+    userProvidedFrameworkId = False
     for a in remaining_args:
         if a.find('--%') == 0:
+            userProvidedFrameworkId = True
             play_env["id"] = a[3:]
     if remaining_args.count('--%%%s' % play_env["id"]) == 1:
         remaining_args.remove('--%%%s' % play_env["id"])
 
     if play_command in ['test', 'auto-test', 'autotest'] :
         # If framework-id is not a valid test-id, force it to 'test'
-        if not isTestFrameworkId( play_env["id"] ): 
+        if not userProvidedFrameworkId and not isTestFrameworkId( play_env["id"] ):
             play_env["id"] = 'test'
 
     if showLogo:
